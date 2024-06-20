@@ -75,6 +75,7 @@ public class CPT {
             }
         }
         result.variables = newVariables;
+        v.addNumMultiplication();
 
         for (Map.Entry<List<String>, Double> entry1 : table.entrySet()) {
             for (Map.Entry<List<String>, Double> entry2 : other.table.entrySet()) {
@@ -83,27 +84,57 @@ public class CPT {
                     for (String condition : entry2.getKey()) {
                         if (!newConditions.contains(condition)) {
                             newConditions.add(condition);
-                            v.addNumMultiplication();
                         }
                     }
-                    result.setProbability(newConditions, entry1.getValue() * entry2.getValue());
+                    double newProbability = entry1.getValue() * entry2.getValue();
+
+                    result.setProbability(newConditions, newProbability);
                 }
             }
         }
         return result;
     }
 
+
+//    public CPT join(CPT other, List<String> commonVariables, VariableElimination v) {
+//        CPT result = new CPT();
+//        List<String> newVariables = new ArrayList<>(variables);
+//        for (String var : other.variables) {
+//            if (!newVariables.contains(var)) {
+//                newVariables.add(var);
+//            }
+//        }
+//        result.variables = newVariables;
+//
+//        for (Map.Entry<List<String>, Double> entry1 : table.entrySet()) {
+//            for (Map.Entry<List<String>, Double> entry2 : other.table.entrySet()) {
+//                if (matches(entry1.getKey(), entry2.getKey(), commonVariables)) {
+//                    List<String> newConditions = new ArrayList<>(entry1.getKey());
+//                    for (String condition : entry2.getKey()) {
+//                        if (!newConditions.contains(condition)) {
+//                            newConditions.add(condition);
+//                            v.addNumMultiplication();
+//                        }
+//                    }
+//                    result.setProbability(newConditions, entry1.getValue() * entry2.getValue());
+//                }
+//            }
+//        }
+//        return result;
+//    }
+
     // Added matches method
     private boolean matches(List<String> conditions1, List<String> conditions2, List<String> commonVariables) {
         for (String var : commonVariables) {
-            int index1 = conditions1.indexOf(var);
-            int index2 = conditions2.indexOf(var);
-            if (index1 != -1 && index2 != -1 && !conditions1.get(index1).equals(conditions2.get(index2))) {
+            String value1 = conditions1.stream().filter(cond -> cond.startsWith(var + "=")).findFirst().orElse(null);
+            String value2 = conditions2.stream().filter(cond -> cond.startsWith(var + "=")).findFirst().orElse(null);
+            if (value1 == null || value2 == null || !value1.equals(value2)) {
                 return false;
             }
         }
         return true;
     }
+
 
     public double[] getProbabilities(String queryValue) {
         double[] probabilities = new double[variables.size()];
@@ -195,24 +226,22 @@ public class CPT {
             List<String> conditions = entry.getKey();
             List<String> newConditions = new ArrayList<>(conditions);
             newConditions.removeIf(cond -> cond.startsWith(variable + "="));
-            double currentProbability = cpt.getProbability(newConditions);
+            double currentProbability = marginalizedCPT.getProbability(newConditions);
             v.addNumAdditions();
             marginalizedCPT.setProbability(newConditions, currentProbability + entry.getValue());
         }
-        System.out.println(v.numAdditions+" additions");
         return marginalizedCPT;
     }
 
+
     // New helper method added
     public static CPT normalize(CPT cpt) {
-        double sum = 0.0;
-        for (double value : cpt.getTable().values()) {
-            sum += value;
-        }
+        double sum = cpt.getTable().values().stream().mapToDouble(Double::doubleValue).sum();
         CPT normalizedCPT = new CPT();
         for (Map.Entry<List<String>, Double> entry : cpt.getTable().entrySet()) {
             normalizedCPT.setProbability(entry.getKey(), entry.getValue() / sum);
         }
         return normalizedCPT;
     }
+
 }

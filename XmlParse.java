@@ -6,11 +6,11 @@ import java.util.*;
 
 public class XmlParse {
 
-    public static BayesianNetwork parseXML(String path) {
+    public static BayesianNetwork parseXML(File file) {
         BayesianNetwork network = new BayesianNetwork();
 
         try {
-            File file = new File(path);
+
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
