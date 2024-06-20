@@ -3,7 +3,7 @@ import java.util.*;
 public class BayesianNetwork {
     private Map<String, Node> nodes;
 
-
+    //Builder
     public BayesianNetwork() {
         nodes = new HashMap<>();
     }

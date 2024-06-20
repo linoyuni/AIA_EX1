@@ -1,190 +1,179 @@
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
 import java.io.*;
-import java.util.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Ex1 {
+//326191269
 
+/**
+ * In order to implement the algorithms
+ * creat an object of each class (VariableElimination, BayesBall)
+ * enter at the constructor the network
+ * then run the algorithms by running the methods of the objects
+ * for BayesBall, run isIndependent method
+ * for VariableElimination, run executeQuery method
+ * enter the question as a string
+ *
+ * to parse a xml file, use the parseXML method in the XmlParse class
+ * the method returns a BayesianNetwork object
+ */
+
+
+class Ex1 {
     public static void main(String[] args) {
 
-//        XmlParse.parseXML("src/alarm_net.xml");
+
+//        try {
+//            // Read the input file name from "input.txt"
+//            BufferedReader reader = new BufferedReader(new FileReader("input.txt"));
+//            String xmlFileName = reader.readLine();
+//            BayesianNetwork network = new BayesianNetwork();
 //
-//        BayesianNetwork network = XmlParse.parseXML("src/alarm_net.xml");
+//            // Parse the XML file
+//            File inputFile = new File(xmlFileName);
+//            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+//            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+//            Document doc = dBuilder.parse(inputFile);
+//            doc.getDocumentElement().normalize();
 //
-//        network.printCPTs();
+//                // Parse variables
+//                NodeList variableList = doc.getElementsByTagName("VARIABLE");
+//                for (int i = 0; i < variableList.getLength(); i++) {
+//                    Element variableElement = (Element) variableList.item(i);
+//                    String variableName = variableElement.getElementsByTagName("NAME").item(0).getTextContent();
+//                    Node node = new Node(variableName);
 //
-//        VariableElimination ve = new VariableElimination(network);
-//        VariableElimination ve1 = new VariableElimination(network);
+//                    NodeList outcomeList = variableElement.getElementsByTagName("OUTCOME");
+//                    for (int j = 0; j < outcomeList.getLength(); j++) {
+//                        String outcome = outcomeList.item(j).getTextContent();
+//                        node.addOutcome(outcome);
+//                    }
 //
-//        CPT newcpt=new CPT();
-//        newcpt=network.cpts().get("J").join(network.cpts().get("M"));
-//        newcpt.printTable();
+//                    network.addNode(node);
+//                }
 //
-//        String question1="P(B=T|J=T,M=T) A-E";
-//        String question2="P(B=T|J=T,M=T) E-A";
-//        String question3="P(J=T|B=T) A-E-M";
-//        String question4="P(J=T|B=T) M-E-A";
+//                // Parse definitions
+//                NodeList definitionList = doc.getElementsByTagName("DEFINITION");
+//                for (int i = 0; i < definitionList.getLength(); i++) {
+//                    Element definitionElement = (Element) definitionList.item(i);
+//                    String forNodeName = definitionElement.getElementsByTagName("FOR").item(0).getTextContent();
+//                    Node forNode = network.getNode(forNodeName);
 //
-//        ve.executeQuery(question1);
+//                    NodeList givenList = definitionElement.getElementsByTagName("GIVEN");
+//                    List<Node> parents = new ArrayList<>();
+//                    for (int j = 0; j < givenList.getLength(); j++) {
+//                        String givenNodeName = givenList.item(j).getTextContent();
+//                        Node parentNode = network.getNode(givenNodeName);
+//                        forNode.addParent(parentNode);
+//                        parentNode.addChild(forNode);
+//                        parents.add(parentNode);
+//                    }
 //
-//        ve1.executeQuery(question2);
+//                    String[] probabilities = definitionElement.getElementsByTagName("TABLE").item(0).getTextContent().trim().split("\\s+");
+//                    List<String> outcomes = forNode.getOutcomes();
+//                    CPT cpt = new CPT();
 //
-//        ve.executeQuery(question3);
+//                    // Generate all combinations of outcomes and set probabilities in CPT
+//                    XmlParse.generateCombinations(parents, outcomes, probabilities, cpt);
 //
-//        ve.executeQuery(question4);
 //
 //
-//        newcpt=CPT.marginalize(network.cpts().get("A"), "B=T");
-//        newcpt.printTable();
+//                    //adding all the variables to the cpt
+//                    for (Node parent : parents) {
+//                        cpt.addVariable(parent.getName());
+//                    }
+//                    cpt.addVariable(forNode.getName());
 //
-//        int[] arr = {1, 7, 3, 2, 5};
-//        String[] arr2 = {"a", "b", "c", "d", "e"};
-//        ve.mergeSort(arr, arr2, arr.length);
-
-
-//        BayesBall b = new BayesBall(network);
+//                    // Set the generated CPT for the current node
+//                    forNode.setCPT(cpt);
 //
-//        String question = "B-E|";
 //
-//        String question2="B-E|J=T";
+//                }
 //
-//        boolean isDSeparated = b.isIndependent(question);
 //
-//        System.out.println(isDSeparated ? "yes" : "no");
 //
-//        isDSeparated = b.isIndependent(question2);
 //
-//        System.out.println(isDSeparated ? "yes" : "no");
+//
+//
+//            // Print factors after initialization
+//            VariableElimination ve = new VariableElimination(network);
+//            BayesBall bb = new BayesBall(network);
+//            // Read and process each line in the input file
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                if (line.contains("P(")) {
+//                    ve.executeQuery(line);
+//                } else {
+//                    boolean a =bb.isIndependent(line);
+//                    if(a){
+//                        try(BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true))) {
+//                            writer.write("yes");
+//                            writer.newLine();
+//                        }
+//                        catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                    else {
+//                        try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true))) {
+//                            writer.write("no");
+//                            writer.newLine();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                }
+//            }
+//            reader.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//}
 
 
 
-        if (args.length != 1) {
-            System.err.println("Usage: java Ex1 <input.txt>");
-            System.exit(1);
-        }
 
-        String inputFilePath = args[0];
-        File inputFile = new File(inputFilePath);
-        List<String> lines = readInputFile(inputFile);
-        if (lines == null || lines.isEmpty()) {
-            System.err.println("Error reading input file or file is empty.");
-            System.exit(1);
-        }
 
-        // The first line is the XML path
-        String xmlFilePath = lines.get(0);
-        File xmlFile = new File(xmlFilePath);
+        XmlParse.parseXML("src/alarm_net.xml");
 
-        // Parse the Bayesian Network from XML
-        BayesianNetwork network = XmlParse.parseXML(xmlFile);
+        BayesianNetwork network = XmlParse.parseXML("src/alarm_net.xml");
 
-        // Prepare the output
-        List<String> outputLines = new ArrayList<>();
-
-        // Process each question
-        for (int i = 1; i < lines.size(); i++) {
-            String question = lines.get(i).trim();
-            if (question.contains("P(")) {
-                // Variable elimination question
-                String result = processVariableEliminationQuestion(question, network);
-                outputLines.add(result);
-            } else {
-                // Bayes ball question
-                String result = processBayesBallQuestion(question, network);
-                outputLines.add(result);
-            }
-        }
-
-        // Write the output to a file
-        writeOutputFile(outputLines);
-    }
-
-    private static List<String> readInputFile(File inputFile) {
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                lines.add(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return lines;
-    }
-
-    private static void writeOutputFile(List<String> lines) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"))) {
-            for (String line : lines) {
-                writer.write(line);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static String processBayesBallQuestion(String question, BayesianNetwork network) {
-        // Example question: A-B|E1=e1,E2=e2,…,Ek=ek
-        String[] parts = question.split("\\|");
-        String[] nodes = parts[0].split("-");
-        String startNode = nodes[0];
-        String endNode = nodes[1];
-
-        Set<String> evidence = new HashSet<>();
-        if (parts.length > 1) {
-            String[] evidences = parts[1].split(",");
-            for (String evidencePair : evidences) {
-                String[] eParts = evidencePair.split("=");
-                evidence.add(eParts[0]);
-            }
-        }
-
-        // Perform Bayes Ball algorithm
-        BayesBall bayesBall = new BayesBall(network);
-        boolean isDSeparated = bayesBall.isIndependent(startNode, endNode, evidence);
-
-        return isDSeparated ? "yes" : "no";
-    }
-
-    private static String processVariableEliminationQuestion(String question, BayesianNetwork network) {
-        // Example question: P(Q=q|E1=e1, E2=e2, …, Ek=ek) H1-H2-…-Hj
-        Pattern pattern = Pattern.compile("P\\(([^=]+)=([^|]+)\\|([^\\)]+)\\)\\s*([^\\s]*)");
-        Matcher matcher = pattern.matcher(question);
-
-        if (!matcher.find()) {
-            throw new IllegalArgumentException("Invalid question format: " + question);
-        }
-
-        String queryVar = matcher.group(1).trim();
-        String queryValue = matcher.group(2).trim();
-        String evidenceStr = matcher.group(3).trim();
-        String hiddenVarsStr = matcher.group(4).trim();
-
-        // Parse evidence
-        Map<String, String> evidenceMap = new HashMap<>();
-        String[] evidences = evidenceStr.split(",");
-        for (String evidencePair : evidences) {
-            String[] eParts = evidencePair.split("=");
-            evidenceMap.put(eParts[0].trim(), eParts[1].trim());
-        }
-
-        // Parse hidden variables
-        Set<String> hiddenVars = new HashSet<>();
-        if (!hiddenVarsStr.isEmpty()) {
-            String[] hiddenVarArr = hiddenVarsStr.split("-");
-            hiddenVars.addAll(Arrays.asList(hiddenVarArr));
-        }
-
-        // Perform Variable Elimination
+        BayesBall b = new BayesBall(network);
         VariableElimination ve = new VariableElimination(network);
-        VariableElimination.Result result = ve.inference(queryVar, queryValue, evidenceMap, hiddenVars);
 
-        // Format the result to 5 decimal places
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%.5f", result.getProbability()));
-        sb.append(",").append(result.getNumAdditions());
-        sb.append(",").append(result.getNumMultiplications());
 
-        return sb.toString();
+        String bquestion1 = "B-E|";
+        String bquestion2 = "B-E|J=T";
+
+        if(b.isIndependent(bquestion1)){
+            System.out.println("yes");
+        }
+        else{
+            System.out.println("no");
+        }
+
+        if(b.isIndependent(bquestion2)){
+            System.out.println("yes");
+        }
+        else{
+            System.out.println("no");
+        }
+
+        String vquestion1 = "P(B=T|J=T,M=T) A-E";
+        String vquestion2 = "P(B=T|J=T,M=T) E-A";
+        String vquestion3 = "P(J=T|B=T) A-E-M";
+        String vquestion4 = "P(J=T|B=T) M-E-A";
+
+        System.out.println(ve.executeQuery(vquestion1));
+//
+        System.out.println(ve.executeQuery(vquestion2));
+
+        System.out.println(ve.executeQuery(vquestion3));
+
+        System.out.println(ve.executeQuery(vquestion4));
     }
 }
+

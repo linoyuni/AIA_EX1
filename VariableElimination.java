@@ -21,77 +21,6 @@ public class VariableElimination {
         numMultiplications++;
     }
 
-//    public Result inference(String queryVar, String queryValue, Map<String, String> evidenceMap, List<String> hiddenVars) {
-//        // Initialize CPTs for all variables in the network
-//        // Placeholder for actual counts (assuming they are not tracked in this implementation)
-//
-//
-//        for (Node node : network.getNodes()) {
-//            factors.put(node.getName(), node.getCPT());
-//        }
-//
-//        // Incorporate evidence
-//        for (Map.Entry<String, String> evidence : evidenceMap.entrySet()) {
-//            String var = evidence.getKey();
-//            String value = evidence.getValue();
-//            CPT evidenceCPT = new CPT();
-//            for (List<String> conditions : factors.get(var).getConditions()) {
-//                if (conditions.contains(var + "=" + value)) {
-//                    evidenceCPT.setProbability(conditions, factors.get(var).getProbability(conditions));
-//                }
-//            }
-//            factors.put(var, evidenceCPT);
-//        }
-//
-//        // Eliminate hidden variables
-//        CPT resultCPT = eliminateVariables(factors, hiddenVars, this);
-//
-//        // Extract the final probability of the query variable given the evidence
-//        double queryProbability = 0.0;
-//        for (Map.Entry<List<String>, Double> entry : resultCPT.getTable().entrySet()) {
-//            List<String> conditions = entry.getKey();
-//            if (conditions.contains(queryVar + "=" + queryValue)) {
-//                queryProbability += entry.getValue();
-//            }
-//        }
-
-//    public Result inference(String queryVar, String queryValue, Map<String, String> evidenceMap, List<String> hiddenVars) {
-//        // Initialize CPTs for all variables in the network
-//        for (Node node : network.getNodes()) {
-//            factors.put(node.getName(), node.getCPT());
-//        }
-//
-//        // Incorporate evidence
-//        for (Map.Entry<String, String> evidence : evidenceMap.entrySet()) {
-//            String var = evidence.getKey();
-//            String value = evidence.getValue();
-//            CPT evidenceCPT = new CPT();
-//            for (List<String> conditions : factors.get(var).getConditions()) {
-//                if (conditions.contains(var + "=" + value)) {
-//                    evidenceCPT.setProbability(conditions, factors.get(var).getProbability(conditions));
-//                }
-//            }
-//            factors.put(var, evidenceCPT);
-//        }
-//
-//        // Eliminate hidden variables
-//        CPT resultCPT = eliminateVariables(factors, hiddenVars, this);
-//
-//        // Extract the final probability of the query variable given the evidence
-//        double queryProbability = 0.0;
-//        for (Map.Entry<List<String>, Double> entry : resultCPT.getTable().entrySet()) {
-//            List<String> conditions = entry.getKey();
-//            if (conditions.contains(queryVar + "=" + queryValue)) {
-//                queryProbability += entry.getValue();
-//            }
-//        }
-//
-//        // Normalize the result
-//        resultCPT = CPT.normalize(resultCPT);
-//
-//        // Return the result with the number of additions and multiplications
-//        return new Result(queryProbability, numAdditions, numMultiplications);
-//    }
 
     public Result inference(String queryVar, String queryValue, Map<String, String> evidenceMap, List<String> hiddenVars) {
         for (Node node : network.getNodes()) {
@@ -143,6 +72,7 @@ public class VariableElimination {
 
 
 
+    //Sort the factors based on the number of conditions
     public void mergeSort(int[] a,String[] arr1, int n) {
         if (n < 2) {
             return;
@@ -235,6 +165,7 @@ public class VariableElimination {
 
 
 
+    //The final method for using the algorithm
     public String executeQuery(String question){
         String[] parts = question.split(" ");
         String[] nodes = parts[0].split("-");
@@ -267,15 +198,10 @@ public class VariableElimination {
 
         String s = (inference(queryVar, queryValue, evidenceMap, Arrays.asList(hidden)).toString());
 
-        System.out.println(s);
-
         return s;
-
-
-
-
     }
 
+    //Observe the evidence
     private void observeEvidence(Map<String, String> evidenceMap) {
         //observing evidence and leaving only the factors that contain the evidence and only the entries that match the evidence and then remove the evidence
         for (Map.Entry<String, String> entry : evidenceMap.entrySet()) {
@@ -294,6 +220,7 @@ public class VariableElimination {
         }
     }
 
+    //Eliminate the hidden variable
     private void eliminateVariable(CPT table, String var) {
         //summing out the variable we want to eliminate and removing it form the resulting table
         CPT newTable = new CPT();
@@ -315,9 +242,7 @@ public class VariableElimination {
     }
 
 
-
-
-
+    //Class representing the result of the inference
     public static class Result {
         private final double probability;
         private final int numAdditions;
@@ -341,8 +266,9 @@ public class VariableElimination {
             return numMultiplications;
         }
 
+        //returning the result in the format of probability,numAdditions,numMultiplications
         public String toString(){
-            return "Probability: "+probability+" Additions: "+numAdditions+" Multiplications: "+numMultiplications;
+            return probability+","+numAdditions+","+numMultiplications;
         }
     }
 }

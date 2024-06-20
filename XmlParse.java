@@ -6,11 +6,11 @@ import java.util.*;
 
 public class XmlParse {
 
-    public static BayesianNetwork parseXML(File file) {
+    public static BayesianNetwork parseXML(String path) {
         BayesianNetwork network = new BayesianNetwork();
 
         try {
-
+            File file = new File(path);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
@@ -74,12 +74,11 @@ public class XmlParse {
             e.printStackTrace();
         }
 
-        network.printNetwork(); // Assuming you have a method to print the network structure
 
         return network;
     }
 
-    private static void generateCombinations(List<Node> parents, List<String> outcomes, String[] probabilities, CPT cpt) {
+    public static void generateCombinations(List<Node> parents, List<String> outcomes, String[] probabilities, CPT cpt) {
         int count = 0;
         // Calculate the number of outcomes for parents
         int numParentOutcomes = 1;

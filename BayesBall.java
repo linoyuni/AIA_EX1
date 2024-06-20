@@ -12,6 +12,7 @@ public class BayesBall {
         this.visited = new HashSet<>();
     }
 
+
     public boolean isIndependent(String question) {
         // Example question: A-B|E1=e1,E2=e2,…,Ek=ek
         String[] parts = question.split("\\|");
@@ -41,11 +42,13 @@ public class BayesBall {
         return !canReach(startNode, endNode);
     }
 
+    //Helper method
     private boolean canReach(Node startNode, Node endNode) {
         visited.clear();
         return canReachHelper(startNode, endNode, null);
     }
 
+    //check if there is a path from startNode to endNode
     private boolean canReachHelper(Node current, Node target, Node from) {
         if (current == target) {
             return true;

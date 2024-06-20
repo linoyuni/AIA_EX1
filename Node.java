@@ -3,7 +3,7 @@ import java.util.*;
 public class Node {
     private String name;
     private List<String> outcomes;
-    private List<Node> parents = new ArrayList<>();
+    private List<Node> parents;
     private List<Node> children = new ArrayList<>();
     private CPT cpt;
     boolean observed;
