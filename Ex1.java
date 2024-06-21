@@ -150,16 +150,42 @@ class Ex1 {
 
         if(b.isIndependent(bquestion1)){
             System.out.println("yes");
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true))) {
+                writer.write("yes");
+                writer.newLine();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         else{
             System.out.println("no");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true))) {
+                writer.write("no");
+                writer.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         if(b.isIndependent(bquestion2)){
             System.out.println("yes");
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true))) {
+                writer.write("yes");
+                writer.newLine();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         else{
             System.out.println("no");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true))) {
+                writer.write("no");
+                writer.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         String vquestion1 = "P(B=T|J=T,M=T) A-E";
@@ -167,13 +193,50 @@ class Ex1 {
         String vquestion3 = "P(J=T|B=T) A-E-M";
         String vquestion4 = "P(J=T|B=T) M-E-A";
 
-        System.out.println(ve.executeQuery(vquestion1));
-//
-        System.out.println(ve.executeQuery(vquestion2));
+        String ans1 = ve.executeQuery(vquestion1);
 
-        System.out.println(ve.executeQuery(vquestion3));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true))) {
+            writer.write(ans1);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        System.out.println(ve.executeQuery(vquestion4));
+        String ans2 = ve.executeQuery(vquestion2);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true))) {
+            writer.write(ans2);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String ans3 = ve.executeQuery(vquestion3);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true))) {
+            writer.write(ans3);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String ans4 = ve.executeQuery(vquestion4);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true))) {
+            writer.write(ans4);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(ans1);
+        System.out.println(ans2);
+        System.out.println(ans3);
+        System.out.println(ans4);
+
+
+
+
     }
 }
 

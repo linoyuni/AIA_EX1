@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class VariableElimination {
@@ -268,7 +269,8 @@ public class VariableElimination {
 
         //returning the result in the format of probability,numAdditions,numMultiplications
         public String toString(){
-            return probability+","+numAdditions+","+numMultiplications;
+            DecimalFormat df = new DecimalFormat("#.#####");
+            return df.format(probability)+","+numAdditions+","+numMultiplications;
         }
     }
 }
